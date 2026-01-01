@@ -39,11 +39,11 @@ fi
 # Update database.xml with connection string
 xmlstarlet edit -L -u '//DatabaseConfigurationOptions/CustomProviderOptions/ConnectionString' -v "${ConnectionString}" /config/config/database.xml
 
+# run the EFbundle to migrate db to current state
+/jellyfin-pgsql/jellyfin.PgsqlMigrator.dll --connection "${ConnectionString}"
+
 # Migrate jellyfin.db if exists
 if [ ! -f /config/data/jellyfin.db ]; then
-
-    # run the EFbundle to migrate db to current state
-    dotnet run /jellyfin-pgsql/jellyfin.PgsqlMigrator.dll --connection "${ConnectionString}"
     # run pgloader to move data
     pgloader /jellyfin-pgsql/jellyfindb.load
     # rename jellyfin db

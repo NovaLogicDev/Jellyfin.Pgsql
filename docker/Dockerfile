@@ -35,6 +35,7 @@ COPY docker/jellyfindb.load /jellyfin-pgsql/jellyfindb.load
 COPY docker/jellyfin.PgsqlMigrator.dll /jellyfin-pgsql/jellyfin.PgsqlMigrator.dll
 
 # Make entrypoint executable
-RUN chmod +x /entrypoint.sh
+RUN chmod +x /entrypoint.sh && \
+    chmod +x /jellyfin-pgsql/jellyfin.PgsqlMigrator.dll
 
 ENTRYPOINT ["/entrypoint.sh"]
