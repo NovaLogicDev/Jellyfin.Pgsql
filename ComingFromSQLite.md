@@ -6,6 +6,8 @@ This plugin adds PostgreSQL support to the Jellyfin server, replacing the defaul
 > **HIGHLY EXPERIMENTAL**
 > This plugin runs on unstable builds of Jellyfin (10.11+). Use at your own risk and **always backup your data** before attempting a migration.
 
+> [This README is autogen from Google Gemini Pro, Cir. Dec 2025, Human review and revision conducted by NovalogicDev]
+
 ## Quick Start (Fresh Install)
 
 The container automatically configures the database connection using environment variables.
@@ -132,5 +134,3 @@ then bundle the migrations into an idempotent sql script
 ```bash
 dotnet ef migrations script --idempotent --output ./docker/PGSqlMigrate.sql --project "/workspaces/Jellyfin.Pgsql/Jellyfin Plugin.Pgsql" --  --migration-provider Jellyfin-PgSql
 ```
-
-[This README is autogen from Google Gemini Pro, Cir. Dec 2025, Human review and revision conducted by NovalogicDev]
