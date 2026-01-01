@@ -57,5 +57,5 @@ Run `dotnet ef migrations add {MIGRATION_NAME} --project "/workspaces/Jellyfin.P
 # Release flow
 
 To create a new release, first sync all Jellyfin server changes then create a new migration as seen above. After that create a new efbundle:
-`dotnet ef migrations bundle -o docker/jellyfin.PgsqlMigrator.dll -r linux-x64 --self-contained --project "/workspaces/Jellyfin.Pgsql/Jellyfin.Plugin.Pgsql" --  --migration-provider Jellyfin-PgSql`
+`dotnet ef migrations script --idempotent --output ./docker/PGSqlMigrate.sql --project "/workspaces/Jellyfin.Pgsql/Jellyfin Plugin.Pgsql" --  --migration-provider Jellyfin-PgSql`
 Then build the container
