@@ -112,16 +112,16 @@ docker exec -it jellyfin pgloader /jellyfin-pgsql/jellyfindb.load
 ```
 (Note: Ensure your old `jellyfin.db` is present in the data directory before running this.)
 
-Development & Building
+### Development & Building
 The project includes a `Dockerfile` that handles the build, plugin installation, and entrypoint setup.
 
-### Build Container:
+## Build Container:
 
 ```bash
 docker build -t jellyfin-pgsql -f docker/Dockerfile .
 ```
 
-### Build Migrations:
+## Build Migrations:
 
 # Add migration
 Run the following to add a new migration for efcore
