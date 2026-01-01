@@ -1,6 +1,18 @@
-load database
+LOAD DATABASE
     from sqlite:///config/data/jellyfin.db
     into pgsql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
 
-with quote identifiers, data only, truncate, drop indexes
-excluding table names like '__EFMigrationsHistory'
+ WITH data only,
+      truncate,           -- Clear empty tables created by EF Core (prevents conflicts)
+      include no drop,    -- PROTECT the schema EF Core just built
+      create no tables,
+      create no indexes,  -- Indexes already exist from EF Core
+      disable triggers,   -- Speed up loading
+      reset sequences     -- Vital: Syncs 'SERIAL' auto-increment with loaded data
+
+  -- Filter out the Migration History table if you want to rely 
+  -- solely on the new Postgres migration record, or keep it to sync history.
+  -- usually safe to overwrite with 'truncate' enabled.
+
+  SET work_mem to '16MB',
+      maintenance_work_mem to '512MB';

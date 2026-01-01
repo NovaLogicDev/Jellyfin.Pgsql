@@ -22,8 +22,11 @@ RUN apt-get update && \
     apt-get install -y wget ca-certificates gnupg lsb-release && \
     wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor -o /usr/share/keyrings/postgresql-keyring.gpg && \
     echo "deb [signed-by=/usr/share/keyrings/postgresql-keyring.gpg] http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list && \
+    wget https://packages.microsoft.com/config/debian/12/packages-microsoft-prod.deb -O packages-microsoft-prod.deb && \
+    dpkg -i packages-microsoft-prod.deb && \
+    rm packages-microsoft-prod.deb && \
     apt-get update && \
-    apt-get install -y postgresql-client-18 xmlstarlet && \
+    apt-get install -y postgresql-client-18 xmlstarlet dotnet-runtime-9.0 pgloader && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
@@ -32,10 +35,9 @@ COPY --from=build /app/publish/ /jellyfin-pgsql/plugin/
 COPY docker/entrypoint.sh /entrypoint.sh
 COPY docker/database.xml /jellyfin-pgsql/database.xml
 COPY docker/jellyfindb.load /jellyfin-pgsql/jellyfindb.load
-COPY docker/jellyfin.PgsqlMigrator.dll /jellyfin-pgsql/jellyfin.PgsqlMigrator.dll
+COPY docker/PGSqlMigrate.sql /jellyfin-pgsql/PGSqlMigrate.sql
 
 # Make entrypoint executable
-RUN chmod +x /entrypoint.sh && \
-    chmod +x /jellyfin-pgsql/jellyfin.PgsqlMigrator.dll
+RUN chmod +x /entrypoint.sh
 
 ENTRYPOINT ["/entrypoint.sh"]

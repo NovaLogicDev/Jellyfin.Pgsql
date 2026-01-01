@@ -26,6 +26,7 @@ fi
 
 # Build connection string for migration
 ConnectionString="Password=${POSTGRES_PASSWORD};User ID=${POSTGRES_USER};Host=${POSTGRES_HOST};Port=${POSTGRES_PORT};Database=${POSTGRES_DB}"
+PsqlConnectionString="postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}"
 
 # Add SSL options if provided
 if [ -n "${POSTGRES_SSLMODE}" ]; then
@@ -39,8 +40,8 @@ fi
 # Update database.xml with connection string
 xmlstarlet edit -L -u '//DatabaseConfigurationOptions/CustomProviderOptions/ConnectionString' -v "${ConnectionString}" /config/config/database.xml
 
-# run the EFbundle to migrate db to current state
-/jellyfin-pgsql/jellyfin.PgsqlMigrator.dll --connection "${ConnectionString}"
+# run the EFbundle to migrate db to current state, this is an idempotent script so it can run on every startup.
+psql "${PsqlConnectionString}" -f /jellyfin-pgsql/PGSqlMigrate.sql
 
 # Migrate jellyfin.db if exists
 if [ ! -f /config/data/jellyfin.db ]; then
